@@ -1,0 +1,81 @@
+https://gist.github.com/rochacbruno/2883505
+
+#!/usr/bin/env python
+
+# Haversine formula example in Python
+# Author: Wayne Dyck
+
+import math
+
+def distance(origin, destination):
+    lat1, lon1 = origin
+    lat2, lon2 = destination
+    radius = 6371 # km
+
+    dlat = math.radians(lat2-lat1)
+    dlon = math.radians(lon2-lon1)
+    a = math.sin(dlat/2) * math.sin(dlat/2) + math.cos(math.radians(lat1)) \
+        * math.cos(math.radians(lat2)) * math.sin(dlon/2) * math.sin(dlon/2)
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+    d = radius * c
+
+    return d
+
+########################################
+https://stackoverflow.com/questions/19412462/getting-distance-between-two-points-based-on-latitude-longitude
+
+
+from math import sin, cos, sqrt, atan2
+
+R = 6373.0
+
+lat1 = 52.2296756
+lon1 = 21.0122287
+lat2 = 52.406374
+lon2 = 16.9251681
+
+dlon = lon2 - lon1
+dlat = lat2 - lat1
+a = (sin(dlat/2))**2 + cos(lat1) * cos(lat2) * (sin(dlon/2))**2
+c = 2 * atan2(sqrt(a), sqrt(1-a))
+distance = R * c
+
+print "Result", distance
+print "Should be", 278.546
+
+
+###################################################
+https://www.johndcook.com/blog/python_longitude_latitude/
+
+
+import math
+
+def distance_on_unit_sphere(lat1, long1, lat2, long2):
+
+# Convert latitude and longitude to
+# spherical coordinates in radians.
+degrees_to_radians = math.pi/180.0
+
+# phi = 90 - latitude
+phi1 = (90.0 - lat1)*degrees_to_radians
+phi2 = (90.0 - lat2)*degrees_to_radians
+
+# theta = longitude
+theta1 = long1*degrees_to_radians
+theta2 = long2*degrees_to_radians
+
+# Compute spherical distance from spherical coordinates.
+
+# For two locations in spherical coordinates
+# (1, theta, phi) and (1, theta', phi')
+# cosine( arc length ) =
+# sin phi sin phi' cos(theta-theta') + cos phi cos phi'
+# distance = rho * arc length
+
+cos = (math.sin(phi1)*math.sin(phi2)*math.cos(theta1 - theta2) +
+math.cos(phi1)*math.cos(phi2))
+arc = math.acos( cos )
+
+# Remember to multiply arc by the radius of the earth
+# in your favorite set of units to get length.
+return arc
